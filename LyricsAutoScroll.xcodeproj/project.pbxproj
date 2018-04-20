@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7985A0FF2089BFAD00FE83B9 /* UILabel+Height.m in Sources */ = {isa = PBXBuildFile; fileRef = 7985A0FE2089BFAD00FE83B9 /* UILabel+Height.m */; };
 		79B0B0F12088765300374DD9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B0B0F02088765300374DD9 /* AppDelegate.m */; };
 		79B0B0F42088765300374DD9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B0B0F32088765300374DD9 /* ViewController.m */; };
 		79B0B0F72088765300374DD9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79B0B0F52088765300374DD9 /* Main.storyboard */; };
@@ -27,6 +28,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7985A0FD2089BFAD00FE83B9 /* UILabel+Height.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+Height.h"; sourceTree = "<group>"; };
+		7985A0FE2089BFAD00FE83B9 /* UILabel+Height.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Height.m"; sourceTree = "<group>"; };
 		79B0B0EC2088765300374DD9 /* LyricsAutoScroll.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LyricsAutoScroll.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79B0B0EF2088765300374DD9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		79B0B0F02088765300374DD9 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -90,6 +93,8 @@
 				79B0B0FA2088765300374DD9 /* LaunchScreen.storyboard */,
 				79B0B0FD2088765300374DD9 /* Info.plist */,
 				79B0B0FE2088765300374DD9 /* main.m */,
+				7985A0FD2089BFAD00FE83B9 /* UILabel+Height.h */,
+				7985A0FE2089BFAD00FE83B9 /* UILabel+Height.m */,
 			);
 			path = LyricsAutoScroll;
 			sourceTree = "<group>";
@@ -208,6 +213,7 @@
 				79B0B0F42088765300374DD9 /* ViewController.m in Sources */,
 				79B0B0FF2088765300374DD9 /* main.m in Sources */,
 				79B0B0F12088765300374DD9 /* AppDelegate.m in Sources */,
+				7985A0FF2089BFAD00FE83B9 /* UILabel+Height.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

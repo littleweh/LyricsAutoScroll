@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "UILabel+Height.h"
 
 @interface ViewController ()
 @property (strong, nonatomic, readwrite) UIScrollView *scrollView;
@@ -18,7 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSMutableArray *lyrics = [NSMutableArray arrayWithObjects:@"Re重迴  詞/ 曲: 何瑞康", @"有ㄧ種去別的地方開始重新生活一樣", @"關上那些早已習慣卻放不下的許多許多", @"還沒完全失去卻已經開始努力地遺忘", @"沒了畫面沒了聲音沒了爭執也沒了原諒", @"直到某一天", @"生活的浪打在背上", @"痛得忘了原本的傷", @"直到某一天", @"各自的夜有了各自的家", @"誰的溫暖溫暖了誰的肩膀", @"日子一天一天迴圈", @"卻沒有一件事能真的重來一遍", @"退路一步一步走偏", @"已經失去過的又再失去一遍", @"一再的返回起點", @"直到某一天", @"生活的浪打在背上", @"痛得忘了原本的傷", @"直到某一天", @"各自的夜有了各自的家", @"誰的溫暖溫暖了誰的肩膀", nil];
+    NSMutableArray *lyrics = [NSMutableArray arrayWithObjects:@"Re重迴 - 何瑞康", @"詞 / 曲: 何瑞康", @"有ㄧ種去別的地方開始重新生活一樣", @"關上那些早已習慣卻放不下的許多許多", @"還沒完全失去卻已經開始努力地遺忘", @"沒了畫面沒了聲音沒了爭執也沒了原諒", @"直到某一天", @"生活的浪打在背上", @"痛得忘了原本的傷", @"直到某一天", @"各自的夜有了各自的家", @"誰的溫暖溫暖了誰的肩膀", @"日子一天一天迴圈", @"卻沒有一件事能真的重來一遍", @"退路一步一步走偏", @"已經失去過的又再失去一遍", @"一再地返回起點", @"直到某一天", @"生活的浪打在背上", @"痛得忘了原本的傷", @"直到某一天", @"各自的夜有了各自的家", @"誰的溫暖溫暖了誰的肩膀", nil];
 
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,
                                                                   0,
@@ -27,27 +28,47 @@
     [self.view addSubview:self.scrollView];
     [self setupScrollView];
     
-    NSInteger rowNumber = 12;
+    CGFloat scrollViewContentSizeHeight = [self heightForLyricsTextLayersSetFromLyrcis:lyrics AndFontSize:30.0];
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, scrollViewContentSizeHeight);
     
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width,
-                                             lyrics.count * self.scrollView.frame.size.height / rowNumber);
+}
 
-    
+-(CGFloat) heightForLyricsTextLayersSetFromLyrcis: (NSMutableArray*) lyrics AndFontSize: (CGFloat) fontSize {
+    CGPoint originalPointPerLine = CGPointZero;
+    CGFloat lineSpacing = 1.4;
+    CGFloat padding = fontSize;
+    CGFloat width = self.scrollView.frame.size.width - padding;
+
     for (int i = 0; i < lyrics.count; i++) {
+        NSString *lyricsText = lyrics[i];
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0,
+                                                                  0,
+                                                                  width,
+                                                                  self.scrollView.frame.size.height)];
+        [label setText:lyricsText];
+        [label setFont:[UIFont systemFontOfSize:fontSize]];
+        CGSize size = [label sizeForWrappedText];
+        
         CATextLayer *textLayer = [CATextLayer layer];
-        textLayer.frame = CGRectMake(0,
-                                     i * self.scrollView.frame.size.height / rowNumber,
-                                     self.scrollView.frame.size.width,
-                                     self.scrollView.frame.size.height / rowNumber);
-        textLayer.string = lyrics[i];
+        textLayer.frame = CGRectMake(originalPointPerLine.x + padding / 2,
+                                     originalPointPerLine.y,
+                                     width,
+                                     lineSpacing * size.height);
+        
+        textLayer.string = lyricsText;
+        
         textLayer.font = (__bridge CFTypeRef)@"Helvetica";
-        textLayer.fontSize = 20.0;
+        textLayer.fontSize = fontSize;
         textLayer.foregroundColor = [UIColor whiteColor].CGColor;
         textLayer.contentsScale = [UIScreen mainScreen].scale;
         textLayer.alignmentMode = kCAAlignmentCenter;
+        textLayer.wrapped = YES;
+        
         [self.scrollView.layer addSublayer:textLayer];
+        
+        originalPointPerLine.y += textLayer.frame.size.height ;
     }
-    
+    return originalPointPerLine.y;
 }
 
 -(void)setupScrollView {
@@ -104,7 +125,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 
