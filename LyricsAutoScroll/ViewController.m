@@ -11,6 +11,9 @@
 
 @interface ViewController ()
 @property (strong, nonatomic, readwrite) UIScrollView *scrollView;
+@property (weak, nonatomic, readwrite) NSTimer *timer;
+@property (assign, nonatomic, readwrite) int counter;
+@property (assign, nonatomic, readwrite) int numberOfLines;
 
 @end
 
@@ -31,13 +34,49 @@
     CGFloat scrollViewContentSizeHeight = [self heightForLyricsTextLayersSetFromLyrcis:lyrics AndFontSize:30.0];
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, scrollViewContentSizeHeight);
     
+    self.counter = self.scrollView.layer.sublayers.count;
+    self.numberOfLines = self.counter;
+    
+    
+    
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.5
+                                                  target:self
+                                                selector:@selector(showLyrics)
+                                                userInfo:nil
+                                                 repeats:YES];
+    
+}
+
+-(void)showLyrics {
+    if (self.counter-- <= 0) {
+        [self.timer invalidate];
+        NSLog(@"timer retired");
+        self.scrollView.layer.sublayers ;
+    } else {
+        int layerNum = self.numberOfLines - self.counter - 1;
+        if (layerNum <= self.numberOfLines) {
+            CATextLayer *layer = self.scrollView.layer.sublayers[layerNum];
+            layer.backgroundColor = [UIColor grayColor].CGColor;
+            if (self.scrollView.center.y < layer.frame.origin.y && layerNum > 3 && layerNum < self.numberOfLines - 3) {
+                [self.scrollView setContentOffset:self.scrollView.layer.sublayers[layerNum - 3].frame.origin];
+            }
+            
+            if (layerNum > 0) {
+                self.scrollView.layer.sublayers[layerNum -1].backgroundColor = [UIColor blackColor].CGColor;
+            }
+        }
+    }
+}
+
+-(void)dealloc {
+    [self.timer invalidate];
+    NSLog(@"%@ dealloc@", NSStringFromClass([self class]) );
 }
 
 -(CGFloat) heightForLyricsTextLayersSetFromLyrcis: (NSMutableArray*) lyrics AndFontSize: (CGFloat) fontSize {
     CGPoint originalPointPerLine = CGPointZero;
     CGFloat lineSpacing = 1.4;
-    CGFloat padding = fontSize;
-    CGFloat width = self.scrollView.frame.size.width - padding;
+    CGFloat width = self.scrollView.frame.size.width;
 
     for (int i = 0; i < lyrics.count; i++) {
         NSString *lyricsText = lyrics[i];
@@ -50,7 +89,7 @@
         CGSize size = [label sizeForWrappedText];
         
         CATextLayer *textLayer = [CATextLayer layer];
-        textLayer.frame = CGRectMake(originalPointPerLine.x + padding / 2,
+        textLayer.frame = CGRectMake(originalPointPerLine.x,
                                      originalPointPerLine.y,
                                      width,
                                      lineSpacing * size.height);
