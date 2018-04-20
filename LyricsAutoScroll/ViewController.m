@@ -9,7 +9,7 @@
 #import "ViewController.h"
 
 @interface ViewController ()
-@property (strong, nonatomic, readwrite) UIView *containerView;
+@property (strong, nonatomic, readwrite) UIScrollView *scrollView;
 
 @end
 
@@ -20,70 +20,65 @@
     
     NSMutableArray *lyrics = [NSMutableArray arrayWithObjects:@"Re重迴  詞/ 曲: 何瑞康", @"有ㄧ種去別的地方開始重新生活一樣", @"關上那些早已習慣卻放不下的許多許多", @"還沒完全失去卻已經開始努力地遺忘", @"沒了畫面沒了聲音沒了爭執也沒了原諒", @"直到某一天", @"生活的浪打在背上", @"痛得忘了原本的傷", @"直到某一天", @"各自的夜有了各自的家", @"誰的溫暖溫暖了誰的肩膀", @"日子一天一天迴圈", @"卻沒有一件事能真的重來一遍", @"退路一步一步走偏", @"已經失去過的又再失去一遍", @"一再的返回起點", @"直到某一天", @"生活的浪打在背上", @"痛得忘了原本的傷", @"直到某一天", @"各自的夜有了各自的家", @"誰的溫暖溫暖了誰的肩膀", nil];
 
-    self.containerView = [[UIView alloc] initWithFrame:CGRectMake(0,
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,
                                                                   0,
-                                                                  self.view.bounds.size.width,
-                                                                  self.view.bounds.size.height)];
-    [self.view addSubview:self.containerView];
-    [self setupContainerView];
+                                                                  self.view.frame.size.width,
+                                                                  self.view.frame.size.height)];
+    [self.view addSubview:self.scrollView];
+    [self setupScrollView];
     
-    // try to add two CATextLayer
-    CATextLayer *textLayer1 = [CATextLayer layer];
-    CATextLayer *textLayer2 = [CATextLayer layer];
     NSInteger rowNumber = 12;
-    NSInteger initialRowNumber = 3;
     
-    textLayer1.frame = CGRectMake(0,
-                                  initialRowNumber * self.containerView.frame.size.height / rowNumber,
-                                  self.containerView.frame.size.width,
-                                  self.containerView.frame.size.height / rowNumber);
-    textLayer2.frame = CGRectMake(0,
-                                  (initialRowNumber + 1) * self.containerView.frame.size.height / rowNumber,
-                                  self.containerView.frame.size.width,
-                                  self.containerView.frame.size.height / rowNumber);
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width,
+                                             lyrics.count * self.scrollView.frame.size.height / rowNumber);
+
     
-    textLayer1.string = lyrics[0];
-    textLayer2.string = lyrics[1];
-    
-    textLayer1.fontSize = 20.0;
-    textLayer2.fontSize = 20.0;
-    
-    textLayer1.foregroundColor = [UIColor whiteColor].CGColor;
-    textLayer2.foregroundColor = [UIColor whiteColor].CGColor;
-    
-    textLayer1.contentsScale = [UIScreen mainScreen].scale;
-    textLayer2.contentsScale = [UIScreen mainScreen].scale;
-    
-    [self.containerView.layer addSublayer:textLayer1];
-    [self.containerView.layer addSublayer:textLayer2];
-    
-    
-    textLayer1.backgroundColor = [UIColor grayColor].CGColor;
-    textLayer1.foregroundColor = [UIColor whiteColor].CGColor;
+    for (int i = 0; i < lyrics.count; i++) {
+        CATextLayer *textLayer = [CATextLayer layer];
+        textLayer.frame = CGRectMake(0,
+                                     i * self.scrollView.frame.size.height / rowNumber,
+                                     self.scrollView.frame.size.width,
+                                     self.scrollView.frame.size.height / rowNumber);
+        textLayer.string = lyrics[i];
+        textLayer.font = (__bridge CFTypeRef)@"Helvetica";
+        textLayer.fontSize = 20.0;
+        textLayer.foregroundColor = [UIColor whiteColor].CGColor;
+        textLayer.contentsScale = [UIScreen mainScreen].scale;
+        textLayer.alignmentMode = kCAAlignmentCenter;
+        [self.scrollView.layer addSublayer:textLayer];
+    }
     
 }
 
--(void)setupContainerView {
-    self.containerView.backgroundColor = [UIColor blackColor];
-    self.containerView.translatesAutoresizingMaskIntoConstraints = NO;
+-(void)setupScrollView {
+    self.scrollView.backgroundColor = [UIColor blackColor];
+    self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
 
-    NSLayoutConstraint *top = [NSLayoutConstraint constraintWithItem:self.containerView
+    NSLayoutConstraint *top = [NSLayoutConstraint constraintWithItem:self.scrollView
                                                            attribute:NSLayoutAttributeTop
-                                                           relatedBy:NSLayoutRelationEqual
+                                                           relatedBy:NSLayoutRelationGreaterThanOrEqual
                                                               toItem:self.view.layoutMarginsGuide
                                                            attribute:NSLayoutAttributeTop
                                                           multiplier:1.0
-                                                            constant:0.0];
+                                                            constant:100.0];
 
-    NSLayoutConstraint *bottom = [NSLayoutConstraint constraintWithItem:self.containerView
+    NSLayoutConstraint *bottom = [NSLayoutConstraint constraintWithItem:self.scrollView
                                                            attribute:NSLayoutAttributeBottom
-                                                           relatedBy:NSLayoutRelationEqual
+                                                           relatedBy:NSLayoutRelationGreaterThanOrEqual
                                                               toItem:self.view.layoutMarginsGuide
                                                            attribute:NSLayoutAttributeBottom
                                                           multiplier:1.0
-                                                            constant:0.0];
+                                                            constant:-100.0];
+    
+    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:self.scrollView
+                                                               attribute:NSLayoutAttributeCenterY
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.view
+                                                               attribute:NSLayoutAttributeCenterY
+                                                              multiplier:1.0
+                                                                constant:0.0];
 
-    NSLayoutConstraint *leading = [NSLayoutConstraint constraintWithItem:self.containerView
+    NSLayoutConstraint *leading = [NSLayoutConstraint constraintWithItem:self.scrollView
                                                            attribute:NSLayoutAttributeLeading
                                                            relatedBy:NSLayoutRelationEqual
                                                               toItem:self.view
@@ -91,7 +86,7 @@
                                                           multiplier:1.0
                                                             constant:0.0];
 
-    NSLayoutConstraint *trailing = [NSLayoutConstraint constraintWithItem:self.containerView
+    NSLayoutConstraint *trailing = [NSLayoutConstraint constraintWithItem:self.scrollView
                                                                attribute:NSLayoutAttributeTrailing
                                                                relatedBy:NSLayoutRelationEqual
                                                                   toItem:self.view
@@ -101,6 +96,7 @@
     
     [self.view addConstraint:top];
     [self.view addConstraint:bottom];
+    [self.view addConstraint:centerY];
     [self.view addConstraint:leading];
     [self.view addConstraint:trailing];
     
