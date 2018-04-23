@@ -15,6 +15,7 @@
 		79B0B0FC2088765300374DD9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79B0B0FA2088765300374DD9 /* LaunchScreen.storyboard */; };
 		79B0B0FF2088765300374DD9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B0B0FE2088765300374DD9 /* main.m */; };
 		79B0B1092088765300374DD9 /* LyricsAutoScrollTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B0B1082088765300374DD9 /* LyricsAutoScrollTests.m */; };
+		79C953C9208DC272006472AE /* ASLyricsScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C953C8208DC272006472AE /* ASLyricsScrollView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,8 @@
 		79B0B1042088765300374DD9 /* LyricsAutoScrollTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LyricsAutoScrollTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		79B0B1082088765300374DD9 /* LyricsAutoScrollTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LyricsAutoScrollTests.m; sourceTree = "<group>"; };
 		79B0B10A2088765300374DD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		79C953C7208DC272006472AE /* ASLyricsScrollView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASLyricsScrollView.h; sourceTree = "<group>"; };
+		79C953C8208DC272006472AE /* ASLyricsScrollView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASLyricsScrollView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,8 +96,7 @@
 				79B0B0FA2088765300374DD9 /* LaunchScreen.storyboard */,
 				79B0B0FD2088765300374DD9 /* Info.plist */,
 				79B0B0FE2088765300374DD9 /* main.m */,
-				7985A0FD2089BFAD00FE83B9 /* UILabel+Height.h */,
-				7985A0FE2089BFAD00FE83B9 /* UILabel+Height.m */,
+				79C953CA208DE499006472AE /* View */,
 			);
 			path = LyricsAutoScroll;
 			sourceTree = "<group>";
@@ -106,6 +108,17 @@
 				79B0B10A2088765300374DD9 /* Info.plist */,
 			);
 			path = LyricsAutoScrollTests;
+			sourceTree = "<group>";
+		};
+		79C953CA208DE499006472AE /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7985A0FD2089BFAD00FE83B9 /* UILabel+Height.h */,
+				7985A0FE2089BFAD00FE83B9 /* UILabel+Height.m */,
+				79C953C7208DC272006472AE /* ASLyricsScrollView.h */,
+				79C953C8208DC272006472AE /* ASLyricsScrollView.m */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -212,6 +225,7 @@
 			files = (
 				79B0B0F42088765300374DD9 /* ViewController.m in Sources */,
 				79B0B0FF2088765300374DD9 /* main.m in Sources */,
+				79C953C9208DC272006472AE /* ASLyricsScrollView.m in Sources */,
 				79B0B0F12088765300374DD9 /* AppDelegate.m in Sources */,
 				7985A0FF2089BFAD00FE83B9 /* UILabel+Height.m in Sources */,
 			);
