@@ -8,6 +8,7 @@
 
 #import "UILabel+Height.h"
 
+// sources: https://stackoverflow.com/questions/47772963/catextlayer-number-of-lines
 @implementation UILabel (Height)
 
 -(CGSize) sizeForWrappedText {
