@@ -12,12 +12,14 @@
 @interface ViewController ()
 @property (strong, nonatomic, readwrite) UIScrollView *scrollView;
 @property (weak, nonatomic, readwrite) NSTimer *timer;
-@property (assign, nonatomic, readwrite) int counter;
-@property (assign, nonatomic, readwrite) int numberOfLines;
+@property (assign, nonatomic, readwrite) NSInteger counter;
+@property (assign, nonatomic, readwrite) NSInteger numberOfLines;
 
 @end
 
 @implementation ViewController
+
+// ToDo: MVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -31,13 +33,12 @@
     [self.view addSubview:self.scrollView];
     [self setupScrollView];
     
-    CGFloat scrollViewContentSizeHeight = [self heightForLyricsTextLayersSetFromLyrcis:lyrics AndFontSize:30.0];
+    CGFloat scrollViewContentSizeHeight = [self heightForLyricsTextLayersWithLyrcis:lyrics fontSize:30.0];
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, scrollViewContentSizeHeight);
     
+    // ToDo: use lyrics.count ?
     self.counter = self.scrollView.layer.sublayers.count;
     self.numberOfLines = self.counter;
-    
-    
     
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1.5
                                                   target:self
@@ -48,17 +49,25 @@
 }
 
 -(void)showLyrics {
-    if (self.counter-- <= 0) {
+    // ToDo: rewrite autoscroll logic if-else statement
+    NSInteger minUpLines = 3;
+    NSInteger scrollViewCenterY = self.scrollView.frame.size.height / 2;
+    
+    if (self.counter <= 0) {
         [self.timer invalidate];
         NSLog(@"timer retired");
-        self.scrollView.layer.sublayers ;
     } else {
-        int layerNum = self.numberOfLines - self.counter - 1;
-        if (layerNum <= self.numberOfLines) {
-            CATextLayer *layer = self.scrollView.layer.sublayers[layerNum];
+        NSInteger layerNum = self.numberOfLines - self.counter;
+        if (layerNum < self.numberOfLines) {
+            CALayer *layer = self.scrollView.layer.sublayers[layerNum];
             layer.backgroundColor = [UIColor grayColor].CGColor;
-            if (self.scrollView.center.y < layer.frame.origin.y && layerNum > 3 && layerNum < self.numberOfLines - 3) {
-                [self.scrollView setContentOffset:self.scrollView.layer.sublayers[layerNum - 3].frame.origin];
+            if (scrollViewCenterY < layer.position.y
+                && layerNum > minUpLines) {
+                CGPoint contentOffset = self.scrollView.contentOffset;
+                CGFloat newY = layer.position.y - scrollViewCenterY;
+                contentOffset.y = newY;
+                [self.scrollView setContentOffset:contentOffset];
+                
             }
             
             if (layerNum > 0) {
@@ -66,6 +75,7 @@
             }
         }
     }
+    self.counter--;
 }
 
 -(void)dealloc {
@@ -73,8 +83,10 @@
     NSLog(@"%@ dealloc@", NSStringFromClass([self class]) );
 }
 
--(CGFloat) heightForLyricsTextLayersSetFromLyrcis: (NSMutableArray*) lyrics AndFontSize: (CGFloat) fontSize {
-    CGPoint originalPointPerLine = CGPointZero;
+// ToDo: rename or MVC, return height and add TextLayer should be separate
+
+-(CGFloat) heightForLyricsTextLayersWithLyrcis: (NSMutableArray*) lyrics fontSize: (CGFloat) fontSize {
+    CGPoint originalPointInLine = CGPointZero;
     CGFloat lineSpacing = 1.4;
     CGFloat width = self.scrollView.frame.size.width;
 
@@ -86,13 +98,13 @@
                                                                   self.scrollView.frame.size.height)];
         [label setText:lyricsText];
         [label setFont:[UIFont systemFontOfSize:fontSize]];
-        CGSize size = [label sizeForWrappedText];
+        CGSize sizeFromLineBreakWrappedLabel = [label sizeForWrappedText];
         
         CATextLayer *textLayer = [CATextLayer layer];
-        textLayer.frame = CGRectMake(originalPointPerLine.x,
-                                     originalPointPerLine.y,
+        textLayer.frame = CGRectMake(originalPointInLine.x,
+                                     originalPointInLine.y,
                                      width,
-                                     lineSpacing * size.height);
+                                     lineSpacing * sizeFromLineBreakWrappedLabel.height);
         
         textLayer.string = lyricsText;
         
@@ -105,10 +117,12 @@
         
         [self.scrollView.layer addSublayer:textLayer];
         
-        originalPointPerLine.y += textLayer.frame.size.height ;
+        originalPointInLine.y += textLayer.frame.size.height ;
     }
-    return originalPointPerLine.y;
+    return originalPointInLine.y;
 }
+
+// MARK: UI setup
 
 -(void)setupScrollView {
     self.scrollView.backgroundColor = [UIColor blackColor];
