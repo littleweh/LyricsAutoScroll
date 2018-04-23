@@ -14,6 +14,7 @@
 @property (weak, nonatomic, readwrite) NSTimer *timer;
 @property (assign, nonatomic, readwrite) NSInteger counter;
 @property (assign, nonatomic, readwrite) NSInteger numberOfLines;
+@property (nonatomic) CGFloat duration;
 
 @end
 
@@ -33,14 +34,16 @@
     [self.view addSubview:self.scrollView];
     [self setupScrollView];
     
-    CGFloat scrollViewContentSizeHeight = [self heightForLyricsTextLayersWithLyrcis:lyrics fontSize:30.0];
+    CGFloat scrollViewContentSizeHeight = [self heightForLyricsTextLayersWithLyrcis:lyrics fontSize:45.0];
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, scrollViewContentSizeHeight);
     
     // ToDo: use lyrics.count ?
     self.counter = self.scrollView.layer.sublayers.count;
     self.numberOfLines = self.counter;
     
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.5
+    self.duration = 2.0;
+    
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:self.duration
                                                   target:self
                                                 selector:@selector(showLyrics)
                                                 userInfo:nil
@@ -49,8 +52,6 @@
 }
 
 -(void)showLyrics {
-    // ToDo: rewrite autoscroll logic if-else statement
-    NSInteger minUpLines = 3;
     NSInteger scrollViewCenterY = self.scrollView.frame.size.height / 2;
     
     if (self.counter <= 0) {
@@ -61,12 +62,18 @@
         if (layerNum < self.numberOfLines) {
             CALayer *layer = self.scrollView.layer.sublayers[layerNum];
             layer.backgroundColor = [UIColor grayColor].CGColor;
-            if (scrollViewCenterY < layer.position.y
-                && layerNum > minUpLines) {
-                CGPoint contentOffset = self.scrollView.contentOffset;
-                CGFloat newY = layer.position.y - scrollViewCenterY;
-                contentOffset.y = newY;
-                [self.scrollView setContentOffset:contentOffset];
+            if (scrollViewCenterY < layer.position.y) {
+                CGRect scrollViewBounds = self.scrollView.bounds;
+                
+                CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"bounds"];
+                animation.duration = self.duration *0.5;
+                animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+                animation.fromValue = [NSValue valueWithCGRect:scrollViewBounds];
+                
+                scrollViewBounds.origin.y = layer.position.y - scrollViewCenterY;
+                animation.toValue = [NSValue valueWithCGRect:scrollViewBounds];
+                [self.scrollView.layer addAnimation:animation forKey:@"bounds"];
+                self.scrollView.bounds = scrollViewBounds;
                 
             }
             
